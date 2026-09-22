@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AURA Studio — Streetwear Prémium</title>
+<meta name="description" content="AURA Studio: ropa urbana minimalista, materiales orgánicos y diseño atemporal." />
+
+<!-- ===== Tailwind CSS (CDN) ===== -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- ===== Tipografías: Archivo (titulares, carácter industrial) + Inter (cuerpo de texto) ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- ===== Lucide Icons (CDN) ===== -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<script>
+  // Configuración de la paleta de marca dentro de Tailwind
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bone: '#FAFAFA',        // Fondo principal
+          carbon: '#111111',      // Texto principal / negro carbón
+          olive: '#5A6B5C',       // Acento verde oliva suave
+          'olive-dark': '#48584A',
+          stone: '#E7E4DE',       // Bordes y líneas sutiles
+          card: '#F3F1EC',        // Fondo de tarjetas
+        },
+        fontFamily: {
+          display: ['Archivo', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  /* Reset ligero + comportamiento base */
+  html { scroll-behavior: smooth; }
+  body { background-color: #FAFAFA; color: #111111; font-family: 'Inter', sans-serif; }
+
+  /* Foco visible por accesibilidad (teclado) */
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid #5A6B5C;
+    outline-offset: 3px;
+  }
+
+  /* Respeta la preferencia de reducción de movimiento del usuario */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+
+  /* Zoom suave en imágenes de producto al hacer hover */
+  .product-img-wrap { overflow: hidden; }
+  .product-img-wrap img { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+  .product-card:hover .product-img-wrap img { transform: scale(1.06); }
+
+  /* Botón de favorito: relleno de corazón al activarse */
+  .fav-btn[data-active="true"] svg { fill: #111111; stroke: #111111; }
+
+  /* Línea animada bajo los enlaces de navegación */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: '';
+    position: absolute; left: 0; bottom: -4px;
+    width: 0; height: 1px; background: #111111;
+    transition: width 0.25s ease;
+  }
+  .nav-link:hover::after { width: 100%; }
+
+  /* Menú móvil */
+  #mobile-menu { transition: max-height 0.35s ease, opacity 0.3s ease; }
+
+  /* Secuencia de entrada del hero (un único momento orquestado, no repetido en cada sección) */
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-rise { animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+</style>
+</head>
+
+<body class="font-body antialiased">
+
+<!-- ===================== NAVBAR ===================== -->
+<header class="sticky top-0 z-50 bg-bone/90 backdrop-blur border-b border-stone">
+  <nav class="max-w-7xl mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="#" class="font-display font-800 text-2xl tracking-tight text-carbon">AURA</a>
+
+    <!-- Enlaces de navegación (escritorio) -->
+    <ul class="hidden md:flex items-center gap-10 text-sm font-medium text-carbon">
+      <li><a href="#coleccion" class="nav-link">Colección</a></li>
+      <li><a href="#" class="nav-link">Hombre</a></li>
+      <li><a href="#" class="nav-link">Mujer</a></li>
+      <li><a href="#" class="nav-link">Sobre nosotros</a></li>
+    </ul>
+
+    <!-- Iconos de acción -->
+    <div class="flex items-center gap-5 text-carbon">
+      <button aria-label="Buscar" class="hover:text-olive transition-colors">
+        <i data-lucide="search" class="w-5 h-5"></i>
+      </button>
+      <button aria-label="Perfil" class="hidden sm:inline hover:text-olive transition-colors">
+        <i data-lucide="user" class="w-5 h-5"></i>
+      </button>
+      <button id="cart-btn" aria-label="Carrito de compras" class="relative hover:text-olive transition-colors">
+        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+        <span id="cart-count" class="absolute -top-2 -right-2 bg-olive text-white text-[10px] leading-none rounded-full w-4 h-4 flex items-center justify-center">0</span>
+      </button>
+      <!-- Botón de menú móvil -->
+      <button id="menu-toggle" aria-label="Abrir menú" aria-expanded="false" class="md:hidden hover:text-olive transition-colors">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Menú móvil desplegable -->
+  <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 opacity-0 border-t border-stone">
+    <ul class="flex flex-col px-6 py-4 gap-4 text-carbon font-medium">
+      <li><a href="#coleccion" class="block py-1">Colección</a></li>
+      <li><a href="#" class="block py-1">Hombre</a></li>
+      <li><a href="#" class="block py-1">Mujer</a></li>
+      <li><a href="#" class="block py-1">Sobre nosotros</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- ===================== HERO SECTION ===================== -->
+<section class="max-w-7xl mx-auto px-6 lg:px-10 pt-14 pb-20 lg:pt-20 lg:pb-28">
+  <div class="grid lg:grid-cols-12 gap-10 items-end">
+
+    <!-- Columna de texto (izquierda, ocupa más espacio para un titular grande) -->
+    <div class="lg:col-span-7 hero-rise">
+      <p class="text-sm font-medium text-olive-dark mb-5">Colección Otoño / Invierno</p>
+      <h1 class="font-display font-700 text-carbon leading-[0.98] text-5xl sm:text-6xl lg:text-7xl tracking-tight">
+        Define tu<br class="hidden sm:block" /> estilo urbano
+      </h1>
+      <p class="mt-7 max-w-md text-base sm:text-lg text-carbon/70 leading-relaxed">
+        Prendas hechas con algodón orgánico certificado y confeccionadas para durar.
+        Sin temporadas de usar y tirar — solo piezas que se quedan en tu armario.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <a href="#coleccion" class="inline-flex items-center justify-center bg-carbon text-bone px-7 py-3.5 text-sm font-medium hover:bg-olive transition-colors duration-300">
+          Explorar colección
+        </a>
+        <a href="#" class="inline-flex items-center justify-center border border-carbon text-carbon px-7 py-3.5 text-sm font-medium hover:border-olive hover:text-olive-dark transition-colors duration-300">
+          Ver lookbook
+        </a>
+      </div>
+    </div>
+
+    <!-- Columna de imagen (derecha) -->
+    <div class="lg:col-span-5 hero-rise" style="animation-delay: 0.12s;">
+      <div class="relative aspect-[4/5] bg-card border border-stone overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=900&auto=format&fit=crop"
+          alt="Modelo con abrigo oversize en tonos neutros sobre fondo urbano"
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GALERÍA DE PRODUCTOS DESTACADOS ===================== -->
+<section id="coleccion" class="max-w-7xl mx-auto px-6 lg:px-10 py-16 lg:py-24">
+  <div class="flex items-end justify-between mb-10 gap-6">
+    <h2 class="font-display font-700 text-3xl sm:text-4xl text-carbon tracking-tight">Piezas destacadas</h2>
+    <a href="#" class="hidden sm:inline text-sm font-medium text-carbon/70 hover:text-olive-dark transition-colors whitespace-nowrap">Ver todo el catálogo</a>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+
+    <!-- Tarjeta de producto 1 -->
+    <article class="product-card group">
+      <div class="relative product-img-wrap aspect-[3/4] bg-card border border-stone">
+        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=700&auto=format&fit=crop"
+             alt="Sudadera con capucha en gris carbón" class="w-full h-full object-cover" />
+        <button class="fav-btn absolute top-3 right-3 bg-bone/90 w-9 h-9 flex items-center justify-center border border-stone hover:border-carbon transition-colors" aria-label="Añadir a favoritos" data-active="false">
+          <i data-lucide="heart" class="w-4 h-4 text-carbon"></i>
+        </button>
+      </div>
+      <div class="pt-4">
+        <p class="text-xs uppercase tracking-wide text-carbon/50">Sudaderas</p>
+        <h3 class="font-medium text-carbon mt-1">Hoodie Carbón Oversize</h3>
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-carbon font-medium">€68,00</span>
+          <button class="add-to-cart text-xs font-medium border border-carbon px-3 py-2 hover:bg-carbon hover:text-bone transition-colors">Añadir</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Tarjeta de producto 2 -->
+    <article class="product-card group">
+      <div class="relative product-img-wrap aspect-[3/4] bg-card border border-stone">
+        <img src="https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=700&auto=format&fit=crop"
+             alt="Pantalón cargo verde oliva de corte amplio" class="w-full h-full object-cover" />
+        <button class="fav-btn absolute top-3 right-3 bg-bone/90 w-9 h-9 flex items-center justify-center border border-stone hover:border-carbon transition-colors" aria-label="Añadir a favoritos" data-active="false">
+          <i data-lucide="heart" class="w-4 h-4 text-carbon"></i>
+        </button>
+      </div>
+      <div class="pt-4">
+        <p class="text-xs uppercase tracking-wide text-carbon/50">Pantalones</p>
+        <h3 class="font-medium text-carbon mt-1">Cargo Oliva Relaxed Fit</h3>
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-carbon font-medium">€79,00</span>
+          <button class="add-to-cart text-xs font-medium border border-carbon px-3 py-2 hover:bg-carbon hover:text-bone transition-colors">Añadir</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Tarjeta de producto 3 -->
+    <article class="product-card group">
+      <div class="relative product-img-wrap aspect-[3/4] bg-card border border-stone">
+        <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=700&auto=format&fit=crop"
+             alt="Chaqueta técnica negra con capucha" class="w-full h-full object-cover" />
+        <button class="fav-btn absolute top-3 right-3 bg-bone/90 w-9 h-9 flex items-center justify-center border border-stone hover:border-carbon transition-colors" aria-label="Añadir a favoritos" data-active="false">
+          <i data-lucide="heart" class="w-4 h-4 text-carbon"></i>
+        </button>
+      </div>
+      <div class="pt-4">
+        <p class="text-xs uppercase tracking-wide text-carbon/50">Chaquetas</p>
+        <h3 class="font-medium text-carbon mt-1">Track Jacket Negro Mate</h3>
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-carbon font-medium">€134,00</span>
+          <button class="add-to-cart text-xs font-medium border border-carbon px-3 py-2 hover:bg-carbon hover:text-bone transition-colors">Añadir</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Tarjeta de producto 4 -->
+    <article class="product-card group">
+      <div class="relative product-img-wrap aspect-[3/4] bg-card border border-stone">
+        <img src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=700&auto=format&fit=crop"
+             alt="Camiseta básica de algodón orgánico color hueso" class="w-full h-full object-cover" />
+        <button class="fav-btn absolute top-3 right-3 bg-bone/90 w-9 h-9 flex items-center justify-center border border-stone hover:border-carbon transition-colors" aria-label="Añadir a favoritos" data-active="false">
+          <i data-lucide="heart" class="w-4 h-4 text-carbon"></i>
+        </button>
+      </div>
+      <div class="pt-4">
+        <p class="text-xs uppercase tracking-wide text-carbon/50">Camisetas</p>
+        <h3 class="font-medium text-carbon mt-1">Tee Esencial Algodón Bio</h3>
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-carbon font-medium">€34,00</span>
+          <button class="add-to-cart text-xs font-medium border border-carbon px-3 py-2 hover:bg-carbon hover:text-bone transition-colors">Añadir</button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===================== BANNER DE PROPUESTA DE VALOR ===================== -->
+<section class="bg-carbon text-bone">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14 grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-6 text-center sm:text-left">
+
+    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+      <i data-lucide="globe" class="w-6 h-6 text-olive shrink-0"></i>
+      <div>
+        <h3 class="font-medium">Envíos a todo el mundo</h3>
+        <p class="text-sm text-bone/60 mt-1">Entrega en más de 40 países en 3-7 días.</p>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+      <i data-lucide="leaf" class="w-6 h-6 text-olive shrink-0"></i>
+      <div>
+        <h3 class="font-medium">Materiales 100% orgánicos</h3>
+        <p class="text-sm text-bone/60 mt-1">Algodón certificado, teñido de bajo impacto.</p>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+      <i data-lucide="rotate-ccw" class="w-6 h-6 text-olive shrink-0"></i>
+      <div>
+        <h3 class="font-medium">Devoluciones gratuitas</h3>
+        <p class="text-sm text-bone/60 mt-1">30 días para cambiar de opinión, sin coste.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="bg-bone border-t border-stone">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-16">
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+      <!-- Newsletter -->
+      <div class="lg:col-span-5">
+        <h3 class="font-display font-700 text-2xl text-carbon">Únete a AURA</h3>
+        <p class="text-carbon/60 mt-3 max-w-sm text-sm leading-relaxed">
+          Recibe primero los lanzamientos y accesos exclusivos a colecciones limitadas.
+        </p>
+        <form id="newsletter-form" class="mt-6 flex max-w-sm border-b border-carbon focus-within:border-olive transition-colors">
+          <input
+            type="email" required placeholder="tu@email.com"
+            aria-label="Correo electrónico para newsletter"
+            class="bg-transparent flex-1 py-2.5 text-sm text-carbon placeholder:text-carbon/40 outline-none"
+          />
+          <button type="submit" class="text-sm font-medium text-carbon hover:text-olive-dark transition-colors px-2">Suscribirme</button>
+        </form>
+        <p id="newsletter-msg" class="text-xs text-olive-dark mt-2 h-4"></p>
+      </div>
+
+      <!-- Enlaces rápidos -->
+      <div class="lg:col-span-3">
+        <h4 class="text-sm font-medium text-carbon mb-4">Tienda</h4>
+        <ul class="space-y-2.5 text-sm text-carbon/60">
+          <li><a href="#" class="hover:text-carbon transition-colors">Colección completa</a></li>
+          <li><a href="#" class="hover:text-carbon transition-colors">Hombre</a></li>
+          <li><a href="#" class="hover:text-carbon transition-colors">Mujer</a></li>
+          <li><a href="#" class="hover:text-carbon transition-colors">Guía de tallas</a></li>
+        </ul>
+      </div>
+
+      <div class="lg:col-span-2">
+        <h4 class="text-sm font-medium text-carbon mb-4">Empresa</h4>
+        <ul class="space-y-2.5 text-sm text-carbon/60">
+          <li><a href="#" class="hover:text-carbon transition-colors">Sobre nosotros</a></li>
+          <li><a href="#" class="hover:text-carbon transition-colors">Sostenibilidad</a></li>
+          <li><a href="#" class="hover:text-carbon transition-colors">Contacto</a></li>
+        </ul>
+      </div>
+
+      <!-- Redes sociales -->
+      <div class="lg:col-span-2">
+        <h4 class="text-sm font-medium text-carbon mb-4">Síguenos</h4>
+        <div class="flex gap-4">
+          <a href="#" aria-label="Instagram" class="text-carbon/60 hover:text-carbon transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+          <a href="#" aria-label="TikTok" class="text-carbon/60 hover:text-carbon transition-colors"><i data-lucide="music-2" class="w-5 h-5"></i></a>
+          <a href="#" aria-label="X / Twitter" class="text-carbon/60 hover:text-carbon transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-14 pt-6 border-t border-stone flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-carbon/50">
+      <p>&copy; 2026 AURA Studio. Todos los derechos reservados.</p>
+      <div class="flex gap-5">
+        <a href="#" class="hover:text-carbon transition-colors">Privacidad</a>
+        <a href="#" class="hover:text-carbon transition-colors">Términos</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== JAVASCRIPT ===================== -->
+<script>
+  // Inicializa los íconos de Lucide
+  lucide.createIcons();
+
+  // --- Menú móvil desplegable ---
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  let menuOpen = false;
+
+  menuToggle.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    menuToggle.setAttribute('aria-expanded', String(menuOpen));
+    if (menuOpen) {
+      mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+      mobileMenu.style.opacity = '1';
+      menuToggle.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+    } else {
+      mobileMenu.style.maxHeight = '0px';
+      mobileMenu.style.opacity = '0';
+      menuToggle.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+    }
+    lucide.createIcons();
+  });
+
+  // Cierra el menú móvil al pulsar un enlace
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      menuOpen = false;
+      mobileMenu.style.maxHeight = '0px';
+      mobileMenu.style.opacity = '0';
+      menuToggle.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+      lucide.createIcons();
+    });
+  });
+
+  // --- Contador funcional del carrito ---
+  let cartCount = 0;
+  const cartCountEl = document.getElementById('cart-count');
+
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', () => {
+      cartCount++;
+      cartCountEl.textContent = cartCount;
+
+      // Micro-feedback visual en el propio botón
+      const originalText = btn.textContent;
+      btn.textContent = 'Añadido ✓';
+      btn.classList.add('bg-carbon', 'text-bone');
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.classList.remove('bg-carbon', 'text-bone');
+      }, 1200);
+    });
+  });
+
+  // --- Botón de favoritos (toggle) ---
+  document.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const active = btn.getAttribute('data-active') === 'true';
+      btn.setAttribute('data-active', String(!active));
+    });
+  });
+
+  // --- Formulario de newsletter (simulado, sin backend) ---
+  const newsletterForm = document.getElementById('newsletter-form');
+  const newsletterMsg = document.getElementById('newsletter-msg');
+
+  newsletterForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    newsletterMsg.textContent = 'Listo, revisa tu bandeja de entrada.';
+    newsletterForm.reset();
+  });
+</script>
+
+</body>
+</html>
