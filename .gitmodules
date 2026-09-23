@@ -1,3 +1,6 @@
 [submodule "Base"]
 	path = Base
 	url = https://github.com/mtriay20724/mesaClick.git
+[submodule "Optativa-Desarrollo Full-Stack/Base"]
+	path = Optativa-Desarrollo Full-Stack/Base
+	url = https://github.com/mtriay20724/mesaClick.git
