@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../UD1"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "UD2"
+	}
+}

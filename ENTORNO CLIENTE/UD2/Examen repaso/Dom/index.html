@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cesar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <h1>🌎 Explorador del BOM</h1>
+
+  <section id="navegador">
+    <h2>📋 Información del navegador</h2>
+    <ul>
+      <li id="userAgent"></li>
+      <li id="idioma"></li>
+      <li id="plataforma"></li>
+      <li id="resolucion"></li>
+    </ul>
+  </section>
+
+  <section id="navegacion">
+    <h2>🧭 Navegación</h2>
+    <p id="urlActual"></p>
+  </section>
+
+  <section id="redireccion">
+    <h2>🔗 Redirección</h2>
+    <button onclick="irAMDN()">Ir a MDN Web Docs</button>
+  </section>
+
+  <section id="pantalla">
+    <h2>🖥️ Información de la pantalla</h2>
+    <ul>
+      <li id="resTotal"></li>
+      <li id="areaDisponible"></li>
+      <li id="orientacion"></li>
+      <li id="colorDepth"></li>
+      <li id="pixelDepth"></li>
+    </ul>
+  </section>
+
+  <!-- El script va AL FINAL del body, cuando el HTML ya existe -->
+  <script src="javacrip.js"></script>
+
+</body>
+</html>

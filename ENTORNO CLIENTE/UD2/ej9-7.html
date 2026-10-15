@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ejercicio 7</title>
+</head>
+<body>
+
+    <p>¿Cuál es tu nombre?</p>
+
+    <input type="text" id="nombre">
+    <button id="guardar">Guardar</button>
+
+    <p id="saludo"></p>
+
+    <script>
+        let nombre = document.getElementById("nombre");
+        let boton = document.getElementById("guardar");
+        let saludo = document.getElementById("saludo");
+
+        boton.addEventListener("click", function() {
+            document.cookie = "nombre=" + nombre.value;
+            saludo.textContent = "¡Hola, " + nombre.value + "!";
+        });
+    </script>
+
+</body>
+</html>
