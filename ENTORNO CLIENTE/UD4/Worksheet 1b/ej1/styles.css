@@ -1,0 +1,25 @@
+body{
+    text-align: center;
+    background-color: wheat;
+}
+
+#colores{
+    display: grid;
+    grid-template-columns: repeat(2, 300px);
+    justify-content: center;
+    gap: 20px;
+}
+
+#rojo{
+    margin: 0 auto;
+
+}
+#azul{
+    margin: 0 auto;
+}
+#amarillo{
+    margin: 0 auto;
+}
+#verde{
+    margin: 0 auto;
+}

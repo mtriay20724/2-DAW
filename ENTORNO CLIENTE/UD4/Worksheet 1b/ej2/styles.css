@@ -1,0 +1,56 @@
+/*
+        Ejercicio 2
+body{
+    background-color: bisque;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#circulo{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border-style: dashed;
+}*/
+
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 30px;
+}
+
+/* Cuadrícula de números */
+section {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 15px;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+/* Estilo de cada número */
+section div {
+    background-color: #555 !important;
+    height: 100px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+/* Efecto al pasar el ratón */
+section div:hover {
+    background-color: #3498db !important;
+    transform: scale(1.05);
+    cursor: pointer;
+}
