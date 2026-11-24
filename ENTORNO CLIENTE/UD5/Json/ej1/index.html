@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio 1 - Colores JSON</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ddd;
+      margin: 20px;
+    }
+
+    /* Contenedor principal: rejilla de tarjetas */
+    #contenedor {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    /* Cada tarjeta de color */
+    .tarjeta {
+      border: 2px solid #333;
+      border-radius: 10px;
+      padding: 15px;
+      min-height: 150px;
+    }
+
+    /* Cada dato dentro de la tarjeta (fondo semitransparente para que se lea siempre) */
+    .dato {
+      background: rgba(255, 255, 255, 0.8);
+      color: #000;
+      padding: 4px 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+
+    .nombre {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Contenedor principal (vacío: lo rellena JavaScript) -->
+  <div id="contenedor"></div>
+
+  <script>
+    // 1. Datos en formato JSON (como texto), tal y como los da el enunciado
+    const json = `{
+      "colors": [
+        { "color": "black",  "category": "hue",   "type": "primary",   "code": { "rgba": [255,255,255,1], "hex": "#000" } },
+        { "color": "white",  "category": "value",                      "code": { "rgba": [0,0,0,1],       "hex": "#FFF" } },
+        { "color": "red",    "category": "hue",   "type": "primary",   "code": { "rgba": [255,0,0,1],     "hex": "#FF0" } },
+        { "color": "blue",   "category": "hue",   "type": "primary",   "code": { "rgba": [0,0,255,1],     "hex": "#00F" } },
+        { "color": "yellow", "category": "hue",   "type": "primary",   "code": { "rgba": [255,255,0,1],   "hex": "#FF0" } },
+        { "color": "green",  "category": "hue",   "type": "secondary", "code": { "rgba": [0,255,0,1],     "hex": "#0F0" } }
+      ]
+    }`;
+
+    // 2. Convertimos el texto JSON en un objeto de JavaScript
+    const datos = JSON.parse(json);
+
+    // 3. Seleccionamos el contenedor principal
+    const contenedor = document.getElementById("contenedor");
+
+    // Función auxiliar: crea un <div> con una clase y un texto
+    function crearDiv(clase, texto) {
+      const div = document.createElement("div");
+      div.classList.add(clase);
+      div.textContent = texto;
+      return div;
+    }
+
+    // 4. Recorremos cada color y creamos su tarjeta
+    datos.colors.forEach(color => {
+      const tarjeta = document.createElement("div");
+      tarjeta.classList.add("tarjeta");
+
+      // Fondo: usamos el nombre del color porque en el JSON
+      // algunos rgba y hex son incorrectos (black/white, red)
+      tarjeta.style.backgroundColor = color.color;
+
+      // Nombre
+      const nombre = crearDiv("dato", color.color);
+      nombre.classList.add("nombre");
+      tarjeta.appendChild(nombre);
+
+      // Categoría y tipo (el tipo solo si existe)
+      let textoCategoria = "Categoría: " + color.category;
+      if (color.type) {
+        textoCategoria += " | Tipo: " + color.type;
+      }
+      tarjeta.appendChild(crearDiv("dato", textoCategoria));
+
+      // Código rgba: el array lo convertimos a texto "rgba(r, g, b, a)"
+      const rgba = `rgba(${color.code.rgba.join(", ")})`;
+      tarjeta.appendChild(crearDiv("dato", "RGBA: " + rgba));
+
+      // Código hex
+      tarjeta.appendChild(crearDiv("dato", "HEX: " + color.code.hex));
+
+      // Añadimos la tarjeta al contenedor principal
+      contenedor.appendChild(tarjeta);
+    });
+  </script>
+</body>
+</html>

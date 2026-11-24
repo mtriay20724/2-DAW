@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Coordenadas</title>
+
+        <style>
+            body{
+                background-color: antiquewhite;
+            }
+            div{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <button id="btn">Boton</button>
+        <div id="caja" style="background-color: greenyellow; height: 200px; width: 200px;"></div>
+        <p id="coordenadas">
+
+        </p>
+        <script>
+            let pos = document.getElementById("coordenadas");
+            coord = window.addEventListener("deviceorientation", buscarCords); 
+            
+            function buscarCords(e){
+                let beta = e.beta;
+                let gamma = e.gamma;
+                let alpha = e.alpha;
+                pos.innerHTML ="Beta:"+beta+" x<br>Gamma: "+gamma+ " y<br>Alpha: "+ alpha+" z";
+            }
+
+            
+            function onClick() {
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    // Handle iOS 13+ devices.
+                    DeviceOrientationEvent.requestPermission()
+                    .then((state) => {
+                        if (state === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                        } else {
+                        console.error('Request to access the orientation was rejected');
+                        }
+                    })
+                    .catch(console.error);
+                } else {
+                    // Handle regular non iOS 13+ devices.
+                    window.addEventListener('devicemotion', handleOrientation);
+                }
+            }
+
+        </script>
+    </body>
+</html>
